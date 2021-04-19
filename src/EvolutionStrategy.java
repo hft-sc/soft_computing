@@ -41,7 +41,6 @@ public class EvolutionStrategy {
     }
 
     private void run() {
-
         for (int i = 0; i < maxIter; i++) {
 
             System.out.println(i + " -> " + population[0].getFitness() + " " + population[0].getX()[0] + " " + population[0].getSignum() + " " + Individual.learnRate);
@@ -49,14 +48,14 @@ public class EvolutionStrategy {
             for (int k = 0; k < lambda; k++) {
                 int p1 = (int) (population.length * Math.random());
                 int p2 = (int) (population.length * Math.random());
-                Individual indi = new Individual(dimension);
+                Individual individual = new Individual(dimension);
 
-                indi.recombine(population[p1], population[p2]);
-                indi.mutate();
+                individual.recombine(population[p1], population[p2]);
+                individual.mutate();
 
-                indi.fitness();
+                individual.fitness();
 
-                children[k] = indi;
+                children[k] = individual;
             }
 
             if (elitist) replacementElitaer();
