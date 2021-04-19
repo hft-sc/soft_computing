@@ -1,31 +1,48 @@
 public class EvolutionStrategy {
 
+    /**
+     * How many parameters each individual has.
+     */
     private final int dimension;
+
     /**
      * mue in formula
      */
     private final int populationSize;
+
     /**
      * lambda in formula
      */
     private final int childrenSize;
-    private final int maxIter;
+
+    private final int maxIteration;
 
     /**
      * parents are part of candidates for the next generation
      */
     private final boolean elitist;
+
+    /**
+     * Whether it is a minimization or maximization problem
+     */
     private final boolean maximize;
 
-    private Individual[] population;
+    /**
+     * Individuals to choose from for the next generation
+     */
     private final Individual[] children;
 
-    public EvolutionStrategy(int dimension, int populationSize, int childrenSize, int maxIter, boolean elitist, boolean maximize) {
+    /**
+     * Individuals of the current iteration.
+     */
+    private Individual[] population;
+
+    public EvolutionStrategy(int dimension, int populationSize, int childrenSize, int maxIteration, boolean elitist, boolean maximize) {
 
         this.dimension = dimension;
         this.populationSize = populationSize;
         this.childrenSize = childrenSize;
-        this.maxIter = maxIter;
+        this.maxIteration = maxIteration;
         this.elitist = elitist;
         this.maximize = maximize;
 
@@ -47,7 +64,7 @@ public class EvolutionStrategy {
     }
 
     private void run() {
-        for (int i = 0; i < maxIter; i++) {
+        for (int i = 0; i < maxIteration; i++) {
 
             System.out.println(i + " -> " + population[0].fitness + " " + population[0].x[0] + " " + population[0].signum + " " + Individual.learnRate);
 
@@ -64,16 +81,25 @@ public class EvolutionStrategy {
                 children[k] = individual;
             }
 
-            if (elitist) replacementElitist();
-            else replacement();
+            if (elitist) {
+                replacementElitist();
+            } else {
+                replacement();
+            }
         }
     }
 
+    /**
+     * Replace current {@link #population} with the best {@link #children}
+     */
     private void replacement() {
         sort(children);
         if (populationSize >= 0) System.arraycopy(children, 0, population, 0, populationSize);
     }
 
+    /**
+     * Replace current {@link #population} with the best of {@link #children} and {@link #population} combined.
+     */
     private void replacementElitist() {
         sort(children);
         Individual[] popNeu = new Individual[populationSize];
@@ -101,6 +127,9 @@ public class EvolutionStrategy {
         population = popNeu;
     }
 
+    /**
+     * Sort based on {@link #maximize}. If true then sort descending, else ascending
+     */
     private void sort(Individual[] list) {
         mergesort(list, 0, list.length - 1);
     }
@@ -117,8 +146,8 @@ public class EvolutionStrategy {
     private void merge(Individual[] s, int li, int mi, int re) {
         Individual[] temp = new Individual[re - li + 1];
         for (int i = 0, j = li, k = mi; i < temp.length; i++) {
-            if (!maximize) {
-                if ((k > re) || ((j < mi) && (s[j].fitness < s[k].fitness))) {
+            if (maximize) {
+                if ((k > re) || ((j < mi) && (s[j].fitness > s[k].fitness))) {
                     temp[i] = s[j];
                     j++;
                 } else {
@@ -126,7 +155,7 @@ public class EvolutionStrategy {
                     k++;
                 }
             } else {
-                if ((k > re) || ((j < mi) && (s[j].fitness > s[k].fitness))) {
+                if ((k > re) || ((j < mi) && (s[j].fitness < s[k].fitness))) {
                     temp[i] = s[j];
                     j++;
                 } else {
