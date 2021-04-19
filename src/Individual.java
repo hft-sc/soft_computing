@@ -26,19 +26,6 @@ public class Individual {
         this.increment = Math.random();
     }
 
-    private static double snv() {
-        // Methode von BoxMuller
-        double z1 = Math.random();
-        double z2 = Math.random();
-        final var sqrt = Math.sqrt(-2 * Math.log(z2));
-        double x1 = Math.cos(z1 * 2 * Math.PI) * sqrt;
-        double x2 = Math.sin(z1 * 2 * Math.PI) * sqrt;
-        if (Math.random() < 0.5)
-            return x1;
-        else
-            return x2;
-    }
-
     public void calculateFitness() {
         //Rastigrin-Funktion
         //Minimierung
@@ -52,15 +39,13 @@ public class Individual {
     }
 
     public void mutate() {
-        double zz = learnRate * snv();
-        this.increment = this.increment * Math.exp(zz);
-        if (increment < 0) {
-            throw new IllegalArgumentException();
-        }
+        double randomNumber = learnRate * standardNormalDistribution();
+
+        this.increment = this.increment * Math.exp(randomNumber);
 
         for (int i = 0; i < this.x.length; i++) {
-            zz = this.increment * snv();
-            this.x[i] = this.x[i] + zz;
+            randomNumber = this.increment * standardNormalDistribution();
+            this.x[i] = this.x[i] + randomNumber;
         }
     }
 
@@ -73,6 +58,19 @@ public class Individual {
             else
                 this.x[i] = e2.x[i];
         }
+    }
+
+    private static double standardNormalDistribution() {
+        // Methode von BoxMuller
+        double z1 = Math.random();
+        double z2 = Math.random();
+        final var sqrt = Math.sqrt(-2 * Math.log(z2));
+        double x1 = Math.cos(z1 * 2 * Math.PI) * sqrt;
+        double x2 = Math.sin(z1 * 2 * Math.PI) * sqrt;
+        if (Math.random() < 0.5)
+            return x1;
+        else
+            return x2;
     }
 
 }
