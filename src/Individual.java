@@ -3,9 +3,9 @@ public class Individual {
     public static double learnRate;
 
     private final int dimension;
-    private final double[] x;
-    private double signum;
-    private double fitness;
+    final double[] x;
+    double signum;
+    double fitness;
 
     Individual(int dimension) {
         this.dimension = dimension;
@@ -33,7 +33,7 @@ public class Individual {
             return x2;
     }
 
-    public void fitness() {
+    public void calculateFitness() {
         //Rastigrin-Funktion
         //Minimierung
         //Minimum = 0.0 bei x[i] = 0
@@ -69,16 +69,5 @@ public class Individual {
         }
     }
 
-    public double[] getX() {
-        return x;
-    }
-
-    public double getSignum() {
-        return signum;
-    }
-
-    public double getFitness() {
-        return fitness;
-    }
 }
 
