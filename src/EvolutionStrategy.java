@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class EvolutionStrategy {
 
     /**
@@ -62,14 +65,15 @@ public class EvolutionStrategy {
     }
 
     public static void main(String[] args) {
-        EvolutionStrategy strategy = new EvolutionStrategy(50, 100, 700, 3000, false, false);
+        EvolutionStrategy strategy = new EvolutionStrategy(50, 100, 700, 10, false, false);
         strategy.run();
     }
 
     private void run() {
+        System.out.println("Learn rate " + learnRate);
         for (int i = 0; i < maxIteration; i++) {
 
-            System.out.println(i + " -> " + population[0].fitness + " " + population[0].x[0] + " " + population[0].increment + " " + learnRate);
+            System.out.println(i + " -> fitness: " + population[0].fitness + " x:" + population[0].x[0] + " increment:" + population[0].increment);
 
             for (int k = 0; k < childrenSize; k++) {
                 int p1 = (int) (population.length * Math.random());
@@ -90,6 +94,11 @@ public class EvolutionStrategy {
                 replacement();
             }
         }
+
+        var coordinate = Arrays.stream(population[0].x)
+                .mapToObj(number -> String.format("%.8f", number))
+                .collect(Collectors.joining(" | "));
+        System.out.println("Best result with fitness "+ population[0].fitness + " and coordinates [" + coordinate + "]");
     }
 
     /**
