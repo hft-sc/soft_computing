@@ -17,6 +17,8 @@ public class EvolutionStrategy {
 
     private final int maxIteration;
 
+    private final double learnRate;
+
     /**
      * parents are part of candidates for the next generation
      */
@@ -43,6 +45,7 @@ public class EvolutionStrategy {
         this.populationSize = populationSize;
         this.childrenSize = childrenSize;
         this.maxIteration = maxIteration;
+        this.learnRate = 1.0 / Math.sqrt(dimension); // Recommendation from Schwefel95
         this.elitist = elitist;
         this.maximize = maximize;
 
@@ -50,7 +53,7 @@ public class EvolutionStrategy {
         children = new Individual[childrenSize];
 
         for (int i = 0; i < populationSize; i++) {
-            Individual individual = new Individual(dimension);
+            Individual individual = new Individual(dimension, learnRate);
             individual.calculateFitness();
             //System.out.println(i + " parent-> " + individual.fitness);
             population[i] = individual;
@@ -66,12 +69,12 @@ public class EvolutionStrategy {
     private void run() {
         for (int i = 0; i < maxIteration; i++) {
 
-            System.out.println(i + " -> " + population[0].fitness + " " + population[0].x[0] + " " + population[0].signum + " " + Individual.learnRate);
+            System.out.println(i + " -> " + population[0].fitness + " " + population[0].x[0] + " " + population[0].increment + " " + learnRate);
 
             for (int k = 0; k < childrenSize; k++) {
                 int p1 = (int) (population.length * Math.random());
                 int p2 = (int) (population.length * Math.random());
-                Individual individual = new Individual(dimension);
+                Individual individual = new Individual(dimension, learnRate);
 
                 individual.recombine(population[p1], population[p2]);
                 individual.mutate();
